@@ -63,6 +63,7 @@ let routes = function() {
         // OPTIONS request
         .options(function (req, res){
             console.log("OPTIONS on api/animals");  
+
             res.header("Allow", "GET,POST,OPTIONS").send();
         });
 
@@ -93,11 +94,59 @@ let routes = function() {
             })
         })
 
+        // PUT request
+        .put(function(req, res) {
+            console.log(`PUT on api/animals/${req.params.animalId}`);
+
+            // Find all the animals with the given id
+            Animal.find({_id : req.params.animalId}, function (err, animal) {
+                if (err) {
+                    res.status(400).send(err);
+                } 
+                // Check if the request is json. If not give a 406 error
+                else if (!req.is('application/json')) {
+                    res.status(406).send();
+                }
+                else 
+                {
+                    // Give Accept header to response
+                    res.header("Accept", "application/json");
+
+                    let animalItem = animal[0];
+
+                    // Check if req.body is empty
+                    if (Object.keys(req.body).length === 0){
+                        res.status(422).send()
+                    } 
+                    else 
+                    {
+                        if (req.body.name){
+                            animalItem.name = req.body.name;
+                        }
+                        if (req.body.age){
+                            animalItem.age = req.body.age;
+                        }
+                        if (req.body.animal){
+                            animalItem.animal = req.body.animal;
+                        }
+                        if (req.body.diet){
+                            animalItem.diet = req.body.diet;
+                        } 
+
+                        // Save the editted row
+                        animalItem.save();
+
+                        res.send(animalItem);
+                    }
+                }
+            })           
+        })
+
         // OPTIONS request
         .options(function(req, res) {
             console.log(`OPTIONS on api/animals/${req.params.animalId}`);
-            res.header("Allow", "GET,OPTIONS");
-            res.send();
+
+            res.header("Allow", "GET,PUT,OPTIONS").send();
         });
 
 
