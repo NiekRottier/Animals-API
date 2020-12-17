@@ -12,7 +12,7 @@ let routes = function() {
             console.log("POST on api/animals");
             
             // Give Accept header to response
-            res.header("Accept", "application/json");
+            res.header("Accept", "application/json, application/x-www-form-urlencoded");
 
             // Check if the request is json
             if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
@@ -130,13 +130,13 @@ let routes = function() {
                     res.status(400).send(err);
                 } 
                 // Check if the request is json. If not give a 406 error
-                else if (!req.is('application/json')) {
+                else if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
                     res.status(406).send();
                 }
                 else 
                 {
                     // Give Accept header to response
-                    res.header("Accept", "application/json");
+                    res.header("Accept", "application/json, application/x-www-form-urlencoded");
 
                     let animalItem = animal[0];
 
