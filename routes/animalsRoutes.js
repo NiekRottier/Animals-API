@@ -79,7 +79,7 @@ let routes = function() {
                         }
                         else 
                         { 
-                            res.status(201).send(animal) 
+                            res.status(201).json(animal) 
                         }
                     });
                 }
@@ -164,7 +164,7 @@ let routes = function() {
                         // Save the editted row
                         animalItem.save();
 
-                        res.send(animalItem);
+                        res.json(animalItem);
                     }
                 }
             }).orFail()           
@@ -180,7 +180,7 @@ let routes = function() {
                 }
                 else
                 {
-                    res.status(200).send(animal);
+                    res.status(200).json(animal);
                 }
             }).orFail()
         })
