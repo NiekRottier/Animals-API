@@ -1,4 +1,3 @@
-const e = require('express');
 let express = require('express');
 let Animal = require('../models/animalModel');
 
@@ -14,6 +13,7 @@ let routes = function() {
 
             // Find all the animals
             Animal.find({}, function (err, animals) {
+                
                 if (err) {
                     res.status(500).send(err);
                 }
@@ -22,6 +22,7 @@ let routes = function() {
                 }
                 else 
                 {
+                    
                     // Create a variable to put the collection in
                     let animalsCollection = {
                         "items" : [],
@@ -171,11 +172,27 @@ let routes = function() {
             })           
         })
 
+        .delete(function(req, res) {
+            console.log(`DELETE on api/animals/${req.params.animalId}`);
+
+            let animalId = req.params.animalId;
+
+            Animal.findByIdAndDelete(animalId, function(err) {
+                if (err) {
+                    res.status(400).send(err)
+                }
+                else
+                {
+                    res.status(204).send()
+                }
+            })
+        })
+
         // OPTIONS request
         .options(function(req, res) {
             console.log(`OPTIONS on api/animals/${req.params.animalId}`);
 
-            res.header("Allow", "GET,PUT,OPTIONS").send();
+            res.header("Allow", "GET,PUT,DELETE,OPTIONS").send();
         });
 
 
