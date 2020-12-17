@@ -1,3 +1,4 @@
+const e = require('express');
 let express = require('express');
 let Animal = require('../models/animalModel');
 
@@ -7,41 +8,6 @@ let routes = function() {
 
     // Routes for animals collection resource (/api/animals)
     animalRouter.route('/animals')
-        // POST request
-        .post(function(req, res) {
-            console.log("POST on api/animals");
-            
-            // Give Accept header to response
-            res.header("Accept", "application/json, application/x-www-form-urlencoded");
-
-            // Check if the request is json
-            if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
-                res.status(406).send();
-            }
-            else
-            {
-                // Check if req.body is empty
-                if (Object.keys(req.body).length === 0){
-                    res.status(422).send()
-                } 
-                else
-                {
-                    // Create new row with information from request body 
-                    let animal = new Animal(req.body);
-
-                    animal.save(function (err) {
-                        if (err) { 
-                            res.status(400).send(err) 
-                        }
-                        else 
-                        { 
-                            res.status(201).send(animal) 
-                        }
-                    });
-                }
-            }
-        })
-
         // GET request
         .get(function (req, res){
             console.log("GET on api/animals");
@@ -84,6 +50,41 @@ let routes = function() {
                     res.json(animalsCollection);
                 }
             })
+        })
+
+        // POST request
+        .post(function(req, res) {
+            console.log("POST on api/animals");
+            
+            // Give Accept header to response
+            res.header("Accept", "application/json, application/x-www-form-urlencoded");
+
+            // Check if the request is json
+            if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
+                res.status(406).send();
+            }
+            else
+            {
+                // Check if req.body is empty
+                if (Object.keys(req.body).length === 0){
+                    res.status(422).send()
+                } 
+                else
+                {
+                    // Create new row with information from request body 
+                    let animal = new Animal(req.body);
+
+                    animal.save(function (err) {
+                        if (err) { 
+                            res.status(400).send(err) 
+                        }
+                        else 
+                        { 
+                            res.status(201).send(animal) 
+                        }
+                    });
+                }
+            }
         })
 
         // OPTIONS request
