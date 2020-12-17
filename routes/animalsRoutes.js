@@ -176,11 +176,11 @@ let routes = function() {
 
             Animal.findOneAndDelete({_id : req.params.animalId}, function (err, animal) {
                 if (err) {
-                    res.send(err);
+                    res.status(400).send(err);
                 }
                 else
                 {
-                    res.status(200).json(animal);
+                    res.status(204).json(animal);
                 }
             }).orFail()
         })
