@@ -139,9 +139,6 @@ let routes = function() {
                 }
                 else 
                 {
-
-                    let animalItem = animal;
-
                     // Check if req.body is empty
                     if (Object.keys(req.body).length === 0){
                         res.status(422).send("422 - Unprocessable Entity")
@@ -149,22 +146,22 @@ let routes = function() {
                     else 
                     {
                         if (req.body.name){
-                            animalItem.name = req.body.name;
+                            animal.name = req.body.name;
                         }
                         if (req.body.age){
-                            animalItem.age = req.body.age;
+                            animal.age = req.body.age;
                         }
                         if (req.body.animal){
-                            animalItem.animal = req.body.animal;
+                            animal.animal = req.body.animal;
                         }
                         if (req.body.diet){
-                            animalItem.diet = req.body.diet;
+                            animal.diet = req.body.diet;
                         } 
 
                         // Save the editted row
-                        animalItem.save();
+                        animal.save();
 
-                        res.json(animalItem);
+                        res.json(animal);
                     }
                 }
             }).orFail()           
