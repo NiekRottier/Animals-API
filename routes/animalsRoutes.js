@@ -39,10 +39,7 @@ let routes = function() {
                         }
                     });
                 }
-                
             }
-
-            
         })
 
         // GET request
@@ -126,6 +123,9 @@ let routes = function() {
 
             // Find all the animals with the given id
             Animal.find({_id : req.params.animalId}, function (err, animal) {
+                // Give Accept header to response
+                res.header("Accept", "application/json, application/x-www-form-urlencoded");
+                
                 if (err) {
                     res.status(400).send(err);
                 } 
@@ -135,8 +135,6 @@ let routes = function() {
                 }
                 else 
                 {
-                    // Give Accept header to response
-                    res.header("Accept", "application/json, application/x-www-form-urlencoded");
 
                     let animalItem = animal[0];
 
