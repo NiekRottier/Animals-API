@@ -13,16 +13,14 @@ let routes = function() {
 
             // Find all the animals
             Animal.find({}, function (err, animals) {
-                
                 if (err) {
                     res.status(500).send(err);
                 }
-                else if (req.get('Accept') != "application/json") {
+                else if (!req.header('Accept').includes("application/json") && !req.header('Accept').includes("text/html")) {
                     res.status(422).send("422 - Unprocessable Entity");
                 }
                 else 
                 {
-                    
                     // Create a variable to put the collection in
                     let animalsCollection = {
                         "items" : [],
@@ -172,21 +170,21 @@ let routes = function() {
             })           
         })
 
-        .delete(function(req, res) {
-            console.log(`DELETE on api/animals/${req.params.animalId}`);
+        // .delete(function(req, res) {
+        //     console.log(`DELETE on api/animals/${req.params.animalId}`);
 
-            let animalId = req.params.animalId;
+        //     let animalId = req.params.animalId;
 
-            Animal.findByIdAndDelete(animalId, function(err) {
-                if (err) {
-                    res.status(400).send(err)
-                }
-                else
-                {
-                    res.status(204).send("204 - No Content")
-                }
-            })
-        })
+        //     Animal.findByIdAndDelete(animalId, function(err) {
+        //         if (err) {
+        //             res.status(400).send(err)
+        //         }
+        //         else
+        //         {
+        //             res.status(204).send("204 - No Content")
+        //         }
+        //     })
+        // })
 
         // OPTIONS request
         .options(function(req, res) {
