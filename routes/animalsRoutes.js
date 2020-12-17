@@ -100,16 +100,16 @@ let routes = function() {
             console.log(`GET on api/animals/${req.params.animalId}`);   
 
             // Find all the animals with the given id
-            Animal.find({_id : req.params.animalId}, function (err, animal) {
+            Animal.findById(req.params.animalId, function (err, animal) {
                 if (err) {
                     res.status(400).send(err);
                 }
                 else 
                 {
                     let animalDetails = {
-                        "item" : animal[0],
+                        "item" : animal,
                         "_links" : {
-                            "self" : { "href" : `http://${req.headers.host}/api/animals/${animal[0]._id}` },
+                            "self" : { "href" : `http://${req.headers.host}/api/animals/${animal._id}` },
                             "collection" : { "href" : `http://${req.headers.host}/api/animals` }
                         },
                         "pagination" : { "message" : "WIP" }
@@ -117,15 +117,15 @@ let routes = function() {
 
                     res.json(animalDetails);
                 }
-            })
+            }).orFail()
         })
 
         // PUT request
         .put(function(req, res) {
             console.log(`PUT on api/animals/${req.params.animalId}`);
 
-            // Find all the animals with the given id
-            Animal.find({_id : req.params.animalId}, function (err, animal) {
+            // Find the animal with the given id
+            Animal.findById(req.params.animalId, function (err, animal) {
 
                 // Give Accept header to response
                 res.header("Accept", "application/json, application/x-www-form-urlencoded");
@@ -140,7 +140,7 @@ let routes = function() {
                 else 
                 {
 
-                    let animalItem = animal[0];
+                    let animalItem = animal;
 
                     // Check if req.body is empty
                     if (Object.keys(req.body).length === 0){
@@ -167,24 +167,23 @@ let routes = function() {
                         res.send(animalItem);
                     }
                 }
-            })           
+            }).orFail()           
         })
 
-        // .delete(function(req, res) {
-        //     console.log(`DELETE on api/animals/${req.params.animalId}`);
+        // DELETE request
+        .delete(function(req, res) {
+            console.log(`DELETE on api/animals/${req.params.animalId}`);
 
-        //     let animalId = req.params.animalId;
-
-        //     Animal.findByIdAndDelete(animalId, function(err) {
-        //         if (err) {
-        //             res.status(400).send(err)
-        //         }
-        //         else
-        //         {
-        //             res.status(204).send("204 - No Content")
-        //         }
-        //     })
-        // })
+            Animal.findOneAndDelete({_id : req.params.animalId}, function (err, animal) {
+                if (err) {
+                    res.send(err);
+                }
+                else
+                {
+                    res.status(200).send(animal);
+                }
+            }).orFail()
+        })
 
         // OPTIONS request
         .options(function(req, res) {
