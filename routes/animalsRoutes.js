@@ -11,6 +11,9 @@ let routes = function() {
         .get(function (req, res){
             console.log("GET on api/animals");
 
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
             // Find all the animals
             Animal.find({}, function (err, animals) {
                 if (err) {
@@ -55,6 +58,9 @@ let routes = function() {
         .post(function(req, res) {
             console.log("POST on api/animals");
             
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
             // Give Accept header to response
             res.header("Accept", "application/json, application/x-www-form-urlencoded");
 
@@ -89,8 +95,13 @@ let routes = function() {
         // OPTIONS request
         .options(function (req, res){
             console.log("OPTIONS on api/animals");  
+            
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-            res.header("Allow", "GET,POST,OPTIONS").send();
+            res.header("Allow", "GET,POST,OPTIONS");
+            res.header("Access-Control-Allow-Methods", "GET,PUT,DELETE,OPTIONS");
+            res.send();
         });
 
     // Routes for animals detail resource (/api/animals/:animalId)
@@ -98,6 +109,9 @@ let routes = function() {
         // GET request
         .get(function(req, res) {
             console.log(`GET on api/animals/${req.params.animalId}`);   
+
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
             // Find all the animals with the given id
             Animal.findById(req.params.animalId, function (err, animal) {
@@ -123,6 +137,9 @@ let routes = function() {
         // PUT request
         .put(function(req, res) {
             console.log(`PUT on api/animals/${req.params.animalId}`);
+
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
             // Find the animal with the given id
             Animal.findById(req.params.animalId, function (err, animal) {
@@ -171,6 +188,9 @@ let routes = function() {
         .delete(function(req, res) {
             console.log(`DELETE on api/animals/${req.params.animalId}`);
 
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
             Animal.findOneAndDelete({_id : req.params.animalId}, function (err, animal) {
                 if (err) {
                     res.status(400).send(err);
@@ -186,7 +206,12 @@ let routes = function() {
         .options(function(req, res) {
             console.log(`OPTIONS on api/animals/${req.params.animalId}`);
 
-            res.header("Allow", "GET,PUT,DELETE,OPTIONS").send();
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            
+            res.header("Allow", "GET,PUT,DELETE,OPTIONS");
+            res.header("Access-Control-Allow-Methods", "GET,PUT,DELETE,OPTIONS");
+            res.send();
         });
 
 
