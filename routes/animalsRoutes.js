@@ -51,6 +51,9 @@ let routes = function() {
                 if (err) {
                     res.status(500).send(err);
                 }
+                else if (req.get('Accept') != "application/json") {
+                    res.status(422).send();
+                }
                 else 
                 {
                     // Create a variable to put the collection in
@@ -123,9 +126,10 @@ let routes = function() {
 
             // Find all the animals with the given id
             Animal.find({_id : req.params.animalId}, function (err, animal) {
+
                 // Give Accept header to response
                 res.header("Accept", "application/json, application/x-www-form-urlencoded");
-                
+
                 if (err) {
                     res.status(400).send(err);
                 } 
