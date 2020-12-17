@@ -18,7 +18,7 @@ let routes = function() {
                     res.status(500).send(err);
                 }
                 else if (req.get('Accept') != "application/json") {
-                    res.status(422).send();
+                    res.status(422).send("422 - Unprocessable Entity");
                 }
                 else 
                 {
@@ -62,13 +62,13 @@ let routes = function() {
 
             // Check if the request is json
             if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
-                res.status(406).send();
+                res.status(406).send("406 - Not Acceptable");
             }
             else
             {
                 // Check if req.body is empty
                 if (Object.keys(req.body).length === 0){
-                    res.status(422).send()
+                    res.status(422).send("422 - Unprocessable Entity")
                 } 
                 else
                 {
@@ -137,7 +137,7 @@ let routes = function() {
                 } 
                 // Check if the request is json. If not give a 406 error
                 else if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
-                    res.status(406).send();
+                    res.status(406).send("406 - Not Acceptable");
                 }
                 else 
                 {
@@ -146,7 +146,7 @@ let routes = function() {
 
                     // Check if req.body is empty
                     if (Object.keys(req.body).length === 0){
-                        res.status(422).send()
+                        res.status(422).send("422 - Unprocessable Entity")
                     } 
                     else 
                     {
@@ -183,7 +183,7 @@ let routes = function() {
                 }
                 else
                 {
-                    res.status(204).send()
+                    res.status(204).send("204 - No Content")
                 }
             })
         })
