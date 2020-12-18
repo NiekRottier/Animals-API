@@ -30,8 +30,14 @@ let routes = function() {
                     let totalItems = animals.length;
                     let totalPages = Math.ceil(totalItems / limit); 
 
-                    let currentPage = 1;
-                    if (req.params.page){ currentPage = req.params.page }
+                    let currentPage;
+                    if (req.query.page){ 
+                        currentPage = parseInt(req.query.page)
+                    }
+                    else
+                    {
+                        currentPage = 1
+                    }
                     
                     let currentItems;
                     if (currentPage === totalPages) {
@@ -49,7 +55,7 @@ let routes = function() {
                         }
                         else
                         {
-                            return currentPage--
+                            return currentPage - 1
                         }
                     }
 
@@ -59,7 +65,7 @@ let routes = function() {
                         }
                         else
                         {
-                            return currentPage++
+                            return currentPage + 1
                         }
                     }
 
@@ -96,7 +102,11 @@ let routes = function() {
                         }
                     }
 
-                    for(let animal of animals) {
+                    let sliceStart = (currentPage-1) * limit;
+                    let sliceEnd = (currentPage-1) * limit + limit;
+
+                    animalsOnPage = animals.slice(sliceStart, sliceEnd)
+                    for(let animal of animalsOnPage) {
                         // Translate to Json (so we can edit it)
                         let animalItem = animal.toJSON();
 
