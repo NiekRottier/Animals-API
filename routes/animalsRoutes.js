@@ -24,6 +24,45 @@ let routes = function() {
                 }
                 else 
                 {
+                    // Maths for pagination
+                    let limit = 3;
+
+                    let totalItems = animals.length;
+                    let totalPages = Math.ceil(totalItems / limit); 
+
+                    let currentPage = 1;
+                    if (req.params.page){ currentPage = req.params.page }
+                    
+                    let currentItems;
+                    if (currentPage === totalPages) {
+                        currentItems = totalItems - ((totalPages-1) * limit);
+                    }
+                    else
+                    {
+                        currentItems = limit;
+                    }
+                    
+
+                    function previousPage() {
+                        if (currentPage === 1) {
+                            return totalPages
+                        }
+                        else
+                        {
+                            return currentPage--
+                        }
+                    }
+
+                    function nextPage() {
+                        if (currentPage === totalPages) {
+                            return 1
+                        }
+                        else
+                        {
+                            return currentPage++
+                        }
+                    }
+
                     // Create a variable to put the collection in
                     let animalsCollection = {
                         "items" : [],
@@ -31,7 +70,30 @@ let routes = function() {
                             "self" : { "href" : `http://${req.headers.host}/api/animals` },
                             "collection" : { "href" : `http://${req.headers.host}/api/animals` }
                         },
-                        "pagination": { "message" : "WIP" }
+                        "pagination": {
+                            "currentPage" : currentPage,
+                            "currentItems" : currentItems,
+                            "totalPages" : totalPages,
+                            "totalItems" : totalItems,
+                            "_links" : {
+                                "first" : {
+                                    "page" : 1,
+                                    "href" : `http://${req.headers.host}/api/animals?page=1`
+                                },
+                                "last" : {
+                                    "page" : 1,
+                                    "href" : `http://${req.headers.host}/api/animals?page=${totalPages}`
+                                },
+                                "previous" : {
+                                    "page" : 1,
+                                    "href" : `http://${req.headers.host}/api/animals?page=${previousPage()}`
+                                },
+                                "next" : {
+                                    "page" : 1,
+                                    "href" : `http://${req.headers.host}/api/animals?page=${nextPage()}`
+                                }
+                            } 
+                        }
                     }
 
                     for(let animal of animals) {
