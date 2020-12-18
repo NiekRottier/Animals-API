@@ -25,9 +25,13 @@ let routes = function() {
                 else 
                 {
                     // Maths for pagination
-                    let limit = 3;
-
                     let totalItems = animals.length;
+                    
+                    let limit = totalItems;
+                    if (req.query.limit){ 
+                        limit = parseInt(req.query.limit)
+                    }
+
                     let totalPages = Math.ceil(totalItems / limit); 
 
                     let currentPage;
