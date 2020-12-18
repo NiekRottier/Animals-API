@@ -26,7 +26,7 @@ let routes = function() {
                 {
                     // Maths for pagination
                     let totalItems = animals.length;
-                    
+
                     let limit = totalItems;
                     if (req.query.limit){ 
                         limit = parseInt(req.query.limit)
@@ -201,8 +201,7 @@ let routes = function() {
                         "_links" : {
                             "self" : { "href" : `http://${req.headers.host}/api/animals/${animal._id}` },
                             "collection" : { "href" : `http://${req.headers.host}/api/animals` }
-                        },
-                        "pagination" : { "message" : "WIP" }
+                        }
                     };
 
                     res.json(animalDetails);
