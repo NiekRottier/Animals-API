@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/prog06', { useNewUrlParser: true, useUnifiedTopology : true });
+mongoose.connect('mongodb://localhost/prog06', { useNewUrlParser: true, useUnifiedTopology : true, useFindAndModify: false });
 
 console.log("Starting: REST App");
 

@@ -176,7 +176,7 @@ let routes = function() {
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
             res.header("Allow", "GET,POST,OPTIONS");
-            res.header("Access-Control-Allow-Methods", "GET,PUT,DELETE,OPTIONS");
+            res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
             res.send();
         });
 
@@ -215,48 +215,34 @@ let routes = function() {
 
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
+            res.header("Accept", "application/json, application/x-www-form-urlencoded");
+            
             // Find the animal with the given id
-            Animal.findById(req.params.animalId, function (err, animal) {
-
-                // Give Accept header to response
-                res.header("Accept", "application/json, application/x-www-form-urlencoded");
-
-                if (err) {
-                    res.status(400).send(err);
-                } 
-                // Check if the request is json. If not give a 406 error
-                else if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
-                    res.status(406).send("406 - Not Acceptable");
+            Animal.findByIdAndUpdate(req.params.animalId, req.body.item, function (err, animal) {
+                console.log("animal = " + animal);
+                console.log(req.body.item);
+                
+                // Check if there is a req.body
+                if (Object.keys(req.body.item).length === 0){
+                    console.log("req.body is empty");
+                    res.status(422).end();
+                } else if (!req.body.item.name & !req.body.item.age & !req.body.item.animal & !req.body.item.diet) {
+                    console.log("A field is empty");
+                    res.status(422).end();
                 }
                 else 
                 {
-                    // Check if req.body is empty
-                    if (Object.keys(req.body).length === 0){
-                        res.status(422).send("422 - Unprocessable Entity")
-                    } 
-                    else 
-                    {
-                        if (req.body.name){
-                            animal.name = req.body.name;
+                    animal.save(function (err) {
+                        if (err) { 
+                            res.status(400).send(err) 
                         }
-                        if (req.body.age){
-                            animal.age = req.body.age;
+                        else 
+                        { 
+                            res.status(200).json(animal) 
                         }
-                        if (req.body.animal){
-                            animal.animal = req.body.animal;
-                        }
-                        if (req.body.diet){
-                            animal.diet = req.body.diet;
-                        } 
-
-                        // Save the editted row
-                        animal.save();
-
-                        res.json(animal);
-                    }
+                    });
                 }
-            }).orFail()           
+            }).orFail();
         })
 
         // DELETE request
@@ -266,7 +252,7 @@ let routes = function() {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-            Animal.findOneAndDelete({_id : req.params.animalId}, function (err, animal) {
+            Animal.findByIdAndDelete(req.params.animalId, function (err, animal) {
                 if (err) {
                     res.status(400).send(err);
                 }
