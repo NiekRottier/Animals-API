@@ -24,53 +24,56 @@ let routes = function() {
                 }
                 else 
                 {
-                    // Maths for pagination
+                    // Math magic for pagination
+                    let start;
+                    let limit;
+
+                    if (req.query.start && req.query.limit) {
+                        start = parseInt(req.query.start);
+                        limit = parseInt(req.query.limit);
+                        console.log("Querystrings were given");
+                    }
+                    else
+                    {
+                        start = 1;
+                        limit = animals.length
+                        console.log("No querystrings were given");
+                    }
+                    
                     let totalItems = animals.length;
-
-                    let limit = totalItems;
-                    if (req.query.limit){ 
-                        limit = parseInt(req.query.limit)
-                    }
-
-                    let totalPages = Math.ceil(totalItems / limit); 
-
-                    let currentPage;
-                    if (req.query.page){ 
-                        currentPage = parseInt(req.query.page)
-                    }
-                    else
-                    {
-                        currentPage = 1
-                    }
+                    let totalPages = Math.ceil(animals.length / limit);
                     
+                    let firstPage;
+                    let lastPage;
+                    let prevPage;
+                    let nextPage;
+
                     let currentItems;
-                    if (currentPage === totalPages) {
-                        currentItems = totalItems - ((totalPages-1) * limit);
+                    let currentPage;
+
+                    // When there is only one page
+                    if (totalPages == 1) {
+                        firstPage = lastPage = prevPage = nextPage = currentPage = 1;
+                        currentItems = animals.length;
                     }
                     else
                     {
-                        currentItems = limit;
-                    }
-                    
+                        currentPage = Math.ceil(start / limit);
+                        console.log(currentPage);
+                        // currentItems
+                        if (currentPage == totalPages) { currentItems = totalItems - ((totalPages-1) * limit) } 
+                            else { currentItems = limit }
 
-                    function previousPage() {
-                        if (currentPage === 1) {
-                            return totalPages
-                        }
-                        else
-                        {
-                            return currentPage - 1
-                        }
-                    }
+                        firstPage = 1;
+                        lastPage = (totalPages-1) * limit + 1;
 
-                    function nextPage() {
-                        if (currentPage === totalPages) {
-                            return 1
-                        }
-                        else
-                        {
-                            return currentPage + 1
-                        }
+                        // prevPage
+                        if (currentPage == 1) { prevPage = 1 } 
+                            else { prevPage = start - limit }
+                        // nextPage
+                        if (currentPage == totalPages) { nextPage = start }
+                            else { nextPage = start + limit }
+                        
                     }
 
                     // Create a variable to put the collection in
@@ -88,28 +91,35 @@ let routes = function() {
                             "_links" : {
                                 "first" : {
                                     "page" : 1,
-                                    "href" : `http://${req.headers.host}/api/animals?page=1`
+                                    "href" : `http://${req.headers.host}/api/animals?start=${firstPage}&limit=${limit}`
                                 },
                                 "last" : {
                                     "page" : 1,
-                                    "href" : `http://${req.headers.host}/api/animals?page=${totalPages}`
+                                    "href" : `http://${req.headers.host}/api/animals?start=${lastPage}&limit=${limit}`
                                 },
                                 "previous" : {
                                     "page" : 1,
-                                    "href" : `http://${req.headers.host}/api/animals?page=${previousPage()}`
+                                    "href" : `http://${req.headers.host}/api/animals?start=${prevPage}&limit=${limit}`
                                 },
                                 "next" : {
                                     "page" : 1,
-                                    "href" : `http://${req.headers.host}/api/animals?page=${nextPage()}`
+                                    "href" : `http://${req.headers.host}/api/animals?start=${nextPage}&limit=${limit}`
                                 }
                             } 
                         }
                     }
 
-                    let sliceStart = (currentPage-1) * limit;
-                    let sliceEnd = (currentPage-1) * limit + limit;
+                    let animalsOnPage = [];
+                    if (totalPages == 1) {
+                        animalsOnPage = animals
+                    } 
+                    else{
+                        let startSlice = start - 1;
+                        let endSlice = start + limit - 1;
+                        animalsOnPage = animals.slice(startSlice, endSlice)
+                        console.log("THIS ONE SHOULD BE EXECUTED");
+                    }
 
-                    animalsOnPage = animals.slice(sliceStart, sliceEnd)
                     for(let animal of animalsOnPage) {
                         // Translate to Json (so we can edit it)
                         let animalItem = animal.toJSON();
