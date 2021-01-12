@@ -144,11 +144,6 @@ let routes = function() {
             if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
                 res.status(406).send("406 - Not Acceptable");
             }
-            // Check if all the fields are filled
-            // else if (!req.body.item.name & !req.body.item.age & !req.body.item.animal & !req.body.item.diet) {
-            //     console.log("A field is empty");
-            //     res.status(422).end();
-            // } 
             else
             {
                 let animal
