@@ -144,27 +144,31 @@ let routes = function() {
             if (!req.is('application/json', 'application/x-www-form-urlencoded')) {
                 res.status(406).send("406 - Not Acceptable");
             }
+            // Check if all the fields are filled
+            // else if (!req.body.item.name & !req.body.item.age & !req.body.item.animal & !req.body.item.diet) {
+            //     console.log("A field is empty");
+            //     res.status(422).end();
+            // } 
             else
             {
-                // Check if req.body is empty
-                if (Object.keys(req.body).length === 0){
-                    res.status(422).send("422 - Unprocessable Entity")
-                } 
-                else
-                {
-                    // Create new row with information from request body 
-                    let animal = new Animal(req.body);
+                let animal
+                if (req.is('application/json')) {
+                    console.log(req.body.item);
+                    animal = new Animal(req.body.item);
+                } else {
+                    console.log(req.body);
+                    animal = new Animal(req.body);
+                }                
 
-                    animal.save(function (err) {
-                        if (err) { 
-                            res.status(400).send(err) 
-                        }
-                        else 
-                        { 
-                            res.status(201).json(animal) 
-                        }
-                    });
-                }
+                animal.save(function (err) {
+                    if (err) { 
+                        res.status(400).send(err) 
+                    }
+                    else 
+                    { 
+                        res.status(201).json(animal) 
+                    }
+                });
             }
         })
 
@@ -222,11 +226,8 @@ let routes = function() {
                 console.log("animal = " + animal);
                 console.log(req.body.item);
                 
-                // Check if there is a req.body
-                if (Object.keys(req.body.item).length === 0){
-                    console.log("req.body is empty");
-                    res.status(422).end();
-                } else if (!req.body.item.name & !req.body.item.age & !req.body.item.animal & !req.body.item.diet) {
+                // Check if all the fields are filled
+                if (!req.body.item.name & !req.body.item.age & !req.body.item.animal & !req.body.item.diet) {
                     console.log("A field is empty");
                     res.status(422).end();
                 }
